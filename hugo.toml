@@ -1,0 +1,14 @@
+baseURL = 'https://bpieper.me/'
+locale = 'en-us'
+title = "Ben Pieper's blog"
+theme = 'bpieper-blog'
+
+[taxonomies]
+tag = "tags"
+
+[params]
+brand = "Ben Pieper's blog"
+author = "Ben Pieper"
+
+[markup.goldmark.parser]
+wrapStandAloneImageWithinParagraph = false

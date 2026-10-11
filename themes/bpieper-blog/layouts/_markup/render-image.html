@@ -1,0 +1,57 @@
+{{- /*
+  Renders Markdown images. An image on its own line becomes a <figure>,
+  and its title becomes the caption:
+
+    ![Alt text](photo.jpg "Caption, *markdown* allowed")
+
+  Images in the page bundle are resized into a WebP srcset. Anything else
+  (remote URLs, files in static/, SVG, GIF) is passed through unchanged.
+*/ -}}
+{{- $u := urls.Parse .Destination -}}
+{{- $img := "" -}}
+{{- if not $u.IsAbs -}}
+  {{- with .PageInner.Resources.Get $u.Path -}}
+    {{- if and (eq .ResourceType "image") (not (in (slice "svg" "gif") .MediaType.SubType)) -}}
+      {{- $img = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if .IsBlock }}<figure>{{ end -}}
+
+{{- if $img -}}
+  {{- /* Content column is ~690px wide, so these cover 1x and 2x screens. */ -}}
+  {{- $widths := slice -}}
+  {{- range slice 480 720 1080 1440 -}}
+    {{- if le . $img.Width }}{{ $widths = $widths | append . }}{{ end -}}
+  {{- end -}}
+  {{- if not $widths }}{{ $widths = slice $img.Width }}{{ end -}}
+
+  {{- $srcset := slice -}}
+  {{- $fallback := "" -}}
+  {{- range $widths -}}
+    {{- $r := $img.Process (printf "resize %dx webp" .) -}}
+    {{- $srcset = $srcset | append (printf "%s %dw" $r.RelPermalink .) -}}
+    {{- if le . 1080 }}{{ $fallback = $r }}{{ end -}}
+  {{- end -}}
+  {{- if not $fallback }}{{ $fallback = $img.Process (printf "resize %dx webp" (index $widths 0)) }}{{ end -}}
+
+  <img
+    src="{{ $fallback.RelPermalink }}"
+    srcset="{{ delimit $srcset ", " }}"
+    sizes="(min-width: 720px) 688px, calc(100vw - 2rem)"
+    width="{{ $fallback.Width }}"
+    height="{{ $fallback.Height }}"
+    alt="{{ .PlainText }}"
+    {{- if and .Title (not .IsBlock) }} title="{{ .Title }}"{{ end }}
+    loading="lazy"
+    decoding="async">
+{{- else -}}
+  <img src="{{ .Destination | safeURL }}" alt="{{ .PlainText }}"
+    {{- if and .Title (not .IsBlock) }} title="{{ .Title }}"{{ end }} loading="lazy">
+{{- end -}}
+
+{{- if .IsBlock -}}
+  {{- with .Title }}<figcaption>{{ . | markdownify }}</figcaption>{{ end -}}
+  </figure>
+{{- end -}}

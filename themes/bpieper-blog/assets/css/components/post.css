@@ -1,0 +1,17 @@
+.post-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.post-meta .terms {
+  display: inline;
+  list-style: none;
+  margin: 0 0 0 0.75rem;
+  padding: 0;
+}
+
+.post-meta .terms li {
+  display: inline;
+  margin-right: 0.5rem;
+}

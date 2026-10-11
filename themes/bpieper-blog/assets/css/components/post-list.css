@@ -1,0 +1,50 @@
+.post-list,
+.term-list {
+  list-style: none;
+  margin: 2rem 0;
+  padding: 0;
+}
+
+.post-list li {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.post-list time {
+  color: var(--muted);
+  flex: 0 0 11rem;
+  text-align: right;
+}
+
+.post-list a {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.post-list a:hover {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.term-list li {
+  margin-bottom: 0.5rem;
+}
+
+.term-list span {
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  .post-list li {
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-list time {
+    flex-basis: auto;
+    font-size: 0.875rem;
+    text-align: left;
+  }
+}

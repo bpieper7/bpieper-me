@@ -1,0 +1,18 @@
+{{- /*
+Renders a list of pages with the date on the left and the title on the right.
+
+@context {page collection} . The pages to list.
+
+@example: {{ partial "post-list.html" .Pages }}
+*/}}
+
+<ul class="post-list">
+  {{- range . }}
+    <li>
+      {{- $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+      {{- $dateHuman := .Date | time.Format ":date_long" }}
+      <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+      <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    </li>
+  {{- end }}
+</ul>
